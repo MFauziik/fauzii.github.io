@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input Data Produk</title>
+<style>
+    body {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    background-color: #f8f9fa;
+    text-align: center;
+}
+
+h2 {
+    color: #343a40;
+}
+
+form {
+    background-color: #ffffff;
+    padding: 20px;
+    border-radius: 5px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    text-align: center;
+    width: 30%;
+    margin-left: 35%;
+}
+
+label {
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="text"],
+input[type="number"] {
+    width: auto;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ced4da;
+    border-radius: 4px;
+
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #007bff;
+    color: white;
+}
+
+tr:nth-child(even) {
+    background-color: #f2f2f2;
+}
+
+.total {
+    margin-top: 20px;
+    font-weight: bold;
+    font-size: 1.2em;
+}
+</style>
+</head>
+<body>
+
+<h2>Input Data Produk</h2>
+
+<form id="productForm">
+    <label for="productName">Nama Produk:</label>
+    <input type="text" id="productName" required> <br>
+
+    <label for="productPrice">Harga Produk:</label>
+    <input type="number" id="productPrice" min="0" required> <br>
+
+    <label for="productQuantity">Jumlah Produk:</label>
+    <input type="number" id="productQuantity" min="0" required> <br>
+
+    <button type="submit">Tambah Produk</button>
+</form>
+
+<table id="productTable">
+    <thead>
+        <tr>
+            <th>Nama Produk</th>
+            <th>Harga Produk</th>
+            <th>Jumlah Produk</th>
+        </tr>
+    </thead>
+    <tbody>
+        <!-- Rincian produk akan ditambahkan di sini -->
+    </tbody>
+</table>
+
+<div class="total" id="totalPayment">Total Pembayaran: Rp.0</div>
+
+<script>
+    let total = 0;
+
+    // Fungsi untuk format angka menjadi mata uang Rupiah
+    function formatRupiah(angka) {
+        return 'Rp ' + angka.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".") + ',00';
+    }
+
+    document.getElementById('productForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // Mencegah form dari pengiriman default
+
+        // Mengambil nilai dari input
+        const productName = document.getElementById('productName').value;
+        const productPrice = parseFloat(document.getElementById('productPrice').value);
+        const productQuantity = parseInt(document.getElementById('productQuantity').value);
+
+        // Validasi untuk memastikan harga dan jumlah tidak negatif
+        if (productPrice < 0 || productQuantity < 0) {
+            alert("Harga dan jumlah produk tidak boleh negatif.");
+            return;
+        }
+
+        // Menghitung total harga untuk produk yang ditambahkan
+        const subtotal = productPrice * productQuantity;
+        total += subtotal;
+
+        // Membuat baris baru untuk tabel
+        const newRow = document.createElement('tr');
+        newRow.innerHTML = `
+            <td>${productName}</td>
+            <td>${formatRupiah(productPrice)}</td>
+            <td>${productQuantity}</td>
+        `;
+
+        // Menambahkan baris baru ke tabel
+        document.querySelector('#productTable tbody').appendChild(newRow);
+
+// Memperbarui total pembayaran
+document.getElementById('totalPayment').innerText = `Total Pembayaran: ${formatRupiah(total)}`;
+
+// Mengosongkan input setelah ditambahkan
+document.getElementById('productForm').reset();
+});
+</script>
+</body>
+</html>
